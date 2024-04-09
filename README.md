@@ -1,5 +1,6 @@
 # Cognosis-II
 Cognosis-II is a groundbreaking AI-powered chat application that pushes the boundaries of AI-assisted software development. By leveraging state-of-the-art language models and innovative code generation techniques, Cognosis-II introduces a revolutionary approach to building and maintaining software projects.
+This was co-developed by Matthew Busigin and Arbaaz Mahmood.
 ## Apex: The Game-Changing Self-Writing Code Agent
 At the heart of Cognosis-II lies Apex, a cutting-edge AI agent that takes code generation to new heights. Apex solves the long-standing "patching problem" in AI-assisted coding, where language models often struggle to generate complete and functional code snippets. With Apex, you can now interact with your codebase using natural language, and watch as it intelligently writes and modifies code files in real-time.
 ### Solving the Patching Problem
@@ -123,3 +124,18 @@ If you have any ideas or suggestions for future enhancements, please feel free t
 This project is licensed under the MIT License.
 ---
 🚀 Experience the future of AI-assisted coding with Cognosis-II! Harness the power of advanced language models, real-time code integration, and seamless collaboration to revolutionize your software development workflow. Start building intelligent, context-aware applications today! 🌟
+
+
+
+
+
+You can reach out to the maintainter and authors via their twitter:
+
+
+
+#Matt Busigin
+https://twitter.com/mbusigin
+
+
+#Arbaaz Mahmood
+https://twitter.com/hingumtringum
