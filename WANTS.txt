@@ -1,0 +1,8 @@
+- As a user, I want the ability to use a button to be able to follow link targets inside the conversation to previous and next messages (and be able to quickly scroll this way)
+- As an Apex user using /w, I want to be able to
+- As an Apex user, I want to exclude package.json from the code
+- As a Cognosis 2  user, I want to be able to branch a conversation
+- As a Cognosis 2 user, I want to be able to branch a conversation from a specific messages
+- As a Cognosis 2 user, I want to be able to share the output of an assistant message in formatted markdown with the conversation link
+- As a Cognosis 2 user, I want to be able to share a conversation with a particular message highlighted and scrolled to
+- As a Cognosis 2 user, I want to be able to paste in large blocks of code or text, and if it's very large, I want it to be automatically collapsed
