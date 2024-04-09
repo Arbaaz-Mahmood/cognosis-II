@@ -1,0 +1,16 @@
+[Unit]
+Description=Based GPT Frontend
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/npm start
+WorkingDirectory=/home/basedgpt/based-gpt/frontend
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=basedgpt
+Group=basedgpt
+Environment="PATH=/usr/bin"
+
+[Install]
+WantedBy=multi-user.target

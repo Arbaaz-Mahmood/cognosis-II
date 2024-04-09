@@ -1,0 +1,12 @@
+[Unit]
+Description=Based GPT Continuous Deployment
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c 'while true; do /home/basedgpt/based-gpt/deploy.sh; sleep 5; done'
+Restart=always
+User=ec2-user
+Group=ec2-user
+
+[Install]
+WantedBy=multi-user.target

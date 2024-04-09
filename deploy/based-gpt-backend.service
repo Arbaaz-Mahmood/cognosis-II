@@ -1,0 +1,16 @@
+[Unit]
+Description=Based GPT Backend
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/npx ts-node index.ts
+WorkingDirectory=/home/basedgpt/based-gpt/backend
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=basedgpt
+Group=basedgpt
+Environment="PATH=/usr/bin"
+
+[Install]
+WantedBy=multi-user.target
