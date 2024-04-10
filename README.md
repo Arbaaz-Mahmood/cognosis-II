@@ -1,6 +1,6 @@
 # Cognosis-II
-![Screenshot 1](doc/screenshot1.png)
-![Screenshot 2](doc/screenshot2.png)
+![Screenshot 1](doc/screenshot-1.png)
+![Screenshot 2](doc/screenshot-2.png)
 
 Cognosis-II is a groundbreaking AI-powered chat application that pushes the boundaries of AI-assisted software development. By leveraging state-of-the-art language models and innovative code generation techniques, Cognosis-II introduces a revolutionary approach to building and maintaining software projects.
 This was co-developed by Matthew Busigin and Arbaaz Mahmood.
