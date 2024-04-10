@@ -6,3 +6,5 @@
 - As a Cognosis 2 user, I want to be able to share the output of an assistant message in formatted markdown with the conversation link
 - As a Cognosis 2 user, I want to be able to share a conversation with a particular message highlighted and scrolled to
 - As a Cognosis 2 user, I want to be able to paste in large blocks of code or text, and if it's very large, I want it to be automatically collapsed
+- BUGFIX: user messages which are too large for GET requests should be POSTed instead
+- BUGFIX: any errors or exceptions while processessing a message should be logged and displayed to the user

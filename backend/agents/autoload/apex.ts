@@ -17,48 +17,84 @@ export class ApexSession extends Session {
 export class Apex extends Agent<ApexSession> {
 
     code_messages: any[] = [];
-
     root_dir = process.env.ROOT_CODE_PATH ?? "../";
+
+    private escapeSpecialChars(str: string): string {
+        return str.replace(/[\\'"]/g, '\\$&');
+    }
+
+    private convertToDSL(json: Array<[string, any]>, indentation: string = '  '): string {
+        let dsl = '';
+
+        for (const [filePath, fileData] of json) {
+            dsl += `file ${this.escapeSpecialChars(filePath)} {\n`;
+
+            for (const className of fileData.classes || []) {
+                dsl += `${indentation}class ${this.escapeSpecialChars(className.name)} {}\n`;
+            }
+
+            for (const method of fileData.methods || []) {
+                const paramList = method.parameters
+                    .map((param: { name: string; type: string; }) => `${this.escapeSpecialChars(param.name)}${param.type ? `: ${this.escapeSpecialChars(param.type)}` : ''}`)
+                    .join(', ');
+                const returnType = method.returnType ? ` -> ${this.escapeSpecialChars(method.returnType)}` : '';
+                dsl += `${indentation}method ${this.escapeSpecialChars(method.name)}(${paramList})${returnType} {}\n`;
+            }
+
+            for (const interfaceName of fileData.interfaces || []) {
+                dsl += `${indentation}interface ${this.escapeSpecialChars(interfaceName.name)} {}\n`;
+            }
+
+            for (const typeName of fileData.types || []) {
+                dsl += `${indentation}type ${this.escapeSpecialChars(typeName)} {}\n`;
+            }
+
+            dsl += '}\n\n';
+        }
+
+        return dsl.trim();
+    }
+
     private getCodebaseFiles(fileExtensions: string[]): string[] {
         const files: string[] = [];
         const excludedDirectories = ["node_modules", ".git"];
-        const excludedFileExtensions = [".md"];
-      
+        const excludedFileExtensions = [".md", "package.json"];
+
         const isExcludedDirectory = (dirPath: string) =>
-          excludedDirectories.some((excludedDir) =>
-            dirPath.includes(`/${excludedDir}/`)
-          );
-      
+            excludedDirectories.some((excludedDir) =>
+                dirPath.includes(`/${excludedDir}/`)
+            );
+
         const isExcludedFile = (filePath: string) =>
-          excludedFileExtensions.some((excludedExt) =>
-            filePath.endsWith(excludedExt)
-          );
-      
+            excludedFileExtensions.some((excludedExt) =>
+                filePath.endsWith(excludedExt)
+            );
+
         const traverseDirectory = (directory: string) => {
-          if (isExcludedDirectory(directory)) {
-            return;
-          }
-      
-          const entries = fs.readdirSync(directory, { withFileTypes: true });
-      
-          for (const entry of entries) {
-            const fullPath = path.join(directory, entry.name);
-      
-            if (entry.isDirectory()) {
-              traverseDirectory(fullPath);
-            } else if (
-              fileExtensions.includes(path.extname(entry.name)) &&
-              !isExcludedFile(fullPath)
-            ) {
-              files.push(fullPath);
+            if (isExcludedDirectory(directory)) {
+                return;
             }
-          }
+
+            const entries = fs.readdirSync(directory, { withFileTypes: true });
+
+            for (const entry of entries) {
+                const fullPath = path.join(directory, entry.name);
+
+                if (entry.isDirectory()) {
+                    traverseDirectory(fullPath);
+                } else if (
+                    fileExtensions.includes(path.extname(entry.name)) &&
+                    !isExcludedFile(fullPath)
+                ) {
+                    files.push(fullPath);
+                }
+            }
         };
-      
+
         traverseDirectory(path.resolve(__dirname, this.root_dir));
-      
+
         return files;
-      }
+    }
 
     public async run(session: ApexSession): Promise<void> {
         const userInput = session.messages.length > 0 ? session.messages[session.messages.length - 1].content : '';
@@ -78,16 +114,19 @@ export class Apex extends Agent<ApexSession> {
         execSync(`sh agents/apex/concatenate-code.sh ${this.root_dir} ${tempDir}`);
         let code_txt = fs.readFileSync(path.resolve(tempDir, 'code.txt'), 'utf-8');
         const fileExtensions = [".ts", ".tsx", ".js", ".jsx"];
-            const codebaseFiles = this.getCodebaseFiles(fileExtensions);
-            const astCache = new Map<string, any>();
-      
-            for (const file of codebaseFiles) {
-              const fileContent = fs.readFileSync(file, "utf-8");
-              const ast = parseCodeToAST(fileContent, file);
-              astCache.set(file, ast);
-            }
-            console.log("mf")
-            console.log(JSON.stringify(Array.from(astCache.entries()), null, 2))
+        const codebaseFiles = this.getCodebaseFiles(fileExtensions);
+        const astCache = new Map<string, any>();
+
+        for (const file of codebaseFiles) {
+            const fileContent = fs.readFileSync(file, "utf-8");
+            const ast = parseCodeToAST(fileContent, file);
+            astCache.set(file, ast);
+        }
+        const prettyAST = this.convertToDSL(Array.from(astCache.entries()));
+        console.log("mf")
+        console.log(JSON.stringify(Array.from(astCache.entries()), null, 2))
+        fs.writeFileSync('ast.json', JSON.stringify(Array.from(astCache.entries()), null, 2));
+        fs.writeFileSync('ast.dsl', prettyAST);
 
         if (userInput.startsWith('/mcontext')) {
             if (session.messages.length > 0) {
@@ -212,7 +251,7 @@ Output control:
             await this.writeFiles(session, additionalInstructions);
             return;
         }
-        const ast = JSON.stringify(Array.from(astCache.entries()))
+        const ast = prettyAST;
         await session.send("Apex loading...");
         let firstToken = false;
         let claude_output = await session.llm([
@@ -337,19 +376,19 @@ Here is the AST of the codebase: ${ast} `,
                 await session.send("\n🎉 File reconstruction completed!\n");
 
                 let fo = await this.stripEverythingButTheContent(file_output);
-let codeBlocks = fo.split(/<code>([\s\S]*?)<\/code>/g);
-let codeContent = "";
+                let codeBlocks = fo.split(/<code>([\s\S]*?)<\/code>/g);
+                let codeContent = "";
 
-for (let i = 1; i < codeBlocks.length; i += 2) {
-  codeContent += codeBlocks[i].trim() + "\n";
-}
+                for (let i = 1; i < codeBlocks.length; i += 2) {
+                    codeContent += codeBlocks[i].trim() + "\n";
+                }
 
-writeFiles.set(file, codeContent.trim());
+                writeFiles.set(file, codeContent.trim());
                 session.send(`🎉🎉🎉 *${file}* has been successfully reconstructed!\n`);
             }
 
             writeFiles.forEach((value, key) => {
-                session.send( `🚀 Writing file: *${key}*...\n`);
+                session.send(`🚀 Writing file: *${key}*...\n`);
                 fs.writeFileSync(path.resolve(this.root_dir, key), value);
             });
         } catch (e) {
