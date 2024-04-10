@@ -19,7 +19,10 @@ export class Apex extends Agent<ApexSession> {
     code_messages: any[] = [];
     root_dir = process.env.ROOT_CODE_PATH ?? "../";
 
-    private escapeSpecialChars(str: string): string {
+    private escapeSpecialChars(str?: string): string {
+        if ( !str )
+            str = "";
+        console.log( str );
         return str.replace(/[\\'"]/g, '\\$&');
     }
 
@@ -46,7 +49,7 @@ export class Apex extends Agent<ApexSession> {
             }
 
             for (const typeName of fileData.types || []) {
-                dsl += `${indentation}type ${this.escapeSpecialChars(typeName)} {}\n`;
+                dsl += `${indentation}type ${this.escapeSpecialChars(typeName.name)} {}\n`;
             }
 
             dsl += '}\n\n';

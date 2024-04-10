@@ -12,3 +12,9 @@
 - As an Apex user, I want it to run BabyAGI style planning and execution
 - As a Cognosis 2 user, I want to be able to run a command in the background and get a notification when it's done
 - As a Cognosis 2 user, I want to be able to view and edit md tables as a spreadsheet component 
+- As a Cognosis 2 user, I want an actual /slash commands system which allows me to autocomplete both agent-specific and Cognosis-global slash commands with documentation and parameters
+- As a Cognosis 2 user, I want a data query user input message type
+- As an Apex user, I want a /root command to change the code base root directory
+- As an Apex user, I want to see a sidebar with what code is in context
+- As a Cognosis 2 developer, I want feedback loop UI
+- As a Cognosis 2 user, I want flat or folder structure of past conversations
