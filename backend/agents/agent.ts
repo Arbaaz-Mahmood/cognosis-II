@@ -1,4 +1,3 @@
-
 import { Session } from "../session";
 import axios from 'axios';
 import fs from 'fs';
@@ -10,9 +9,9 @@ import { AgentConfig } from "./AgentConfig";
 dotenv.config();
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
-
-export abstract class Agent<T extends Session> {
+export abstract class Agent< Session > {
     res: express.Response;
     visible: boolean = true;
     
@@ -20,7 +19,7 @@ export abstract class Agent<T extends Session> {
         this.res = res;
     }
     
-    public abstract run(session: T): Promise<void>;
+    public abstract run(session: Session): Promise<void>;
 
     async generateSpeech(str: string, voice: "onyx" | "shimmer"): Promise<string> {
         try {
@@ -53,7 +52,7 @@ export abstract class Agent<T extends Session> {
             return outputFilename;
         } catch (error: any) {
             console.error('Error generating speech:', error);
-            return "<error>";
+            return "";
         }
     }
 
@@ -71,7 +70,7 @@ export abstract class Agent<T extends Session> {
                 },
                 {
                     headers: {
-                        'xi-api-key': '976e8c1ee950f36360931692b64e5ae5',
+                        'xi-api-key': ELEVENLABS_API_KEY,
                         'Content-Type': 'application/json',
                     },
                     responseType: 'stream',
@@ -91,7 +90,7 @@ export abstract class Agent<T extends Session> {
             return outputFilename;
         } catch (error: any) {
             console.error('Error generating speech with ElevenLabs:', error);
-            return "<error>";
+            return "Error generating speech";
         }
     }
 
