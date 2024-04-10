@@ -123,10 +123,6 @@ export class Apex extends Agent<ApexSession> {
             astCache.set(file, ast);
         }
         const prettyAST = this.convertToDSL(Array.from(astCache.entries()));
-        console.log("mf")
-        console.log(JSON.stringify(Array.from(astCache.entries()), null, 2))
-        fs.writeFileSync('ast.json', JSON.stringify(Array.from(astCache.entries()), null, 2));
-        fs.writeFileSync('ast.dsl', prettyAST);
 
         if (userInput.startsWith('/mcontext')) {
             if (session.messages.length > 0) {
@@ -479,4 +475,3 @@ import { AgentConfig } from "../AgentConfig";
 import express from 'express';
 
 AgentRegistry.registerAgentFactory('Apex', (res: express.Response, options: AgentConfig) => ((new Apex(res, options))));
-console.log("Apex agent registered");
