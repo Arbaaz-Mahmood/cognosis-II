@@ -36,9 +36,6 @@ const messageTable = new db.SessionMessageTable();
 const completionTable = new db.CompletionTable();
 
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'https://faventius.lol',
-}));
 
 async function runAgent(req: any, res: any) {
   res.set({
