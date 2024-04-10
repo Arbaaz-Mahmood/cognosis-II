@@ -10,4 +10,5 @@
 - BUGFIX: any errors or exceptions while processessing a message should be logged and displayed to the user
 - As a Cognosis 2 user, I want to be able to run either multiple parallel commands, or multiple sequential commands with a macro (depending on if the agent supports it)
 - As an Apex user, I want it to run BabyAGI style planning and execution
-- As an Cognosis 2 user, I want to be able to run a command in the background and get a notification when it's done
+- As a Cognosis 2 user, I want to be able to run a command in the background and get a notification when it's done
+- As a Cognosis 2 user, I want to be able to view and edit md tables as a spreadsheet component 
