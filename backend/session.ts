@@ -18,8 +18,6 @@ export class Session {
     public id: string;
     public messages: LLMMessage[] = [];
     public avatar: string;
-    sex_orientation: string;
-    gender: string;
     public includeCodebase = true;
     public customContext: string | null = null;
 
@@ -192,13 +190,11 @@ Output in markdown.
     }
     res: any;
 
-    constructor(id: string, res: any, avatar: string, sex_orientation: string, gender: string) {
+    constructor(id: string, res: any, avatar: string) {
         this.id = id;
         this.res = res;
         this.messages = [];
         this.avatar = avatar;
-        this.sex_orientation = sex_orientation;
-        this.gender = gender;
     }
 
     async logCompletion(

@@ -57,7 +57,7 @@ async function runAgent(req: any, res: any) {
 
   let session = sessions.get(sessionId as string);
   if (!session) {
-    session = new Session(sessionId as string, res, avatar as string, sex_orientation as string, gender as string);
+    session = new Session(sessionId as string, res, avatar as string);
     sessions.set(sessionId as string, session);
 
     // Create the session entry in the "sessions" table
@@ -75,7 +75,7 @@ async function runAgent(req: any, res: any) {
     const [command, ...args] = message.split(' ');
     if (command === '/reset') {
       session.messages = [];
-      session = new Session(sessionId as string, res, avatar as string, sex_orientation as string, gender as string);
+      session = new Session(sessionId as string, res, avatar as string);
       sessions.set(sessionId as string, session);
       runAgent = false;
     }
