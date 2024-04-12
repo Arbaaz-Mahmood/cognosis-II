@@ -2,18 +2,29 @@ import { Session } from "../session";
 import { Agent } from "./agent";
 import fs from 'fs';
 import { Client } from 'pg';
+import { AgentRegistry } from './AgentRegistry';
+import { AgentConfig } from "./AgentConfig";
+import express from 'express';
+import dotenv from 'dotenv';
+
 
 export class Postgresql extends Agent< any > {
+    public getId(): string {
+        return 'Postgresql';
+    }
     private client: Client;
 
-    constructor(res: express.Response) {
-        super(res, {} as any );
+    constructor(session: Session, res: express.Response) {
+        dotenv.config();
+
+        super(session, res, {} as any );
+
         this.client = new Client({
-            user: '',
-            password: '',
-            host: '',
-            database: '',
-            port: 5432, // Default PostgreSQL port
+            user: process.env.PG_USER,
+            password: process.env.PG_PASSWORD,
+            host: process.env.PG_HOST,
+            database: process.env.PG_DATABASE,
+            port: Number(process.env.PG_PORT) || 5432, // Default PostgreSQL port
         });
     }
 
@@ -90,9 +101,4 @@ Otherwise, just speak beautiful markdown. If there is nothing more to do on a qu
     }
 }
 
-
-import { AgentRegistry } from './AgentRegistry';
-import { AgentConfig } from "./AgentConfig";
-import express from 'express';
-
-AgentRegistry.registerAgentFactory('Postgres', (res: express.Response, options: AgentConfig) => ((new Postgresql(res))) );
+AgentRegistry.registerAgentFactory((session: Session, res: express.Response, options: AgentConfig) => ((new Postgresql(session, res))) );
