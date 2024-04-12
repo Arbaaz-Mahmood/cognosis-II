@@ -30,6 +30,13 @@ export abstract class Agent< T extends AgentSessionState > {
         return new AgentSessionState() as T;
     }
 
+    public s(): T {
+        if (!this.session.agentState.has(this.getId())) {
+            throw new Error(`Agent ${this.getId()} does not have a session state`);
+        }
+        return this.session.agentState.get(this.getId()) as T;
+    }
+
     async generateSpeech(str: string, voice: "onyx" | "shimmer"): Promise<string> {
         try {
             const response = await axios.post(

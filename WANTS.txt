@@ -19,3 +19,5 @@
 - As a Cognosis 2 developer, I want feedback loop UI
 - As a Cognosis 2 user, I want flat or folder structure of past conversations
 - As a Cognosis 2 user, I want code which is pasted to automatically end up in properly typed codeblack via magic.
+- As a Cognosis 2 user, I want the ability to copy and paste a conversation from OpenAI and Anthropic playgrounds and translate to Cognosis 2 conversation
+- As an Apex user, I want Apex to have access to a web browser and be able to interact with it
