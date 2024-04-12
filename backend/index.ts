@@ -83,12 +83,15 @@ async function runAgent(req: any, res: any) {
 
   if (runAgent) {
     console.log(`Running agent ${avatar} for session ${sessionId} with message: ${message}`)
-    let agent = AgentRegistry.getAgent(res, {} as AgentConfig, avatar as string);
+    let agent = AgentRegistry.getAgent(session, res, {} as AgentConfig, avatar as string);
     if (!agent) {
       console.log('No agent found for', avatar);
       await session.send(`No agent found for ${avatar}\n\n`).catch(e => console.error(e));
-      agent = new Null(res, {} as AgentConfig);
+      agent = new Null(session, res, {} as AgentConfig);
     }
+
+    let state = agent.sessionStateFactory();
+    session.agentState.set(agent.getId(), state);
 
     try {
       await agent!.run(session);

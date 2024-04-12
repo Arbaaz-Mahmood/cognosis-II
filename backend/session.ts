@@ -1,6 +1,7 @@
 
 import axios from "axios";
 import { Anthropic } from '@anthropic-ai/sdk';
+import { AgentSessionState } from './agents/agent';
 import { SessionMessageTable, SessionTable, CompletionTable } from "./Database";
 import dotenv from "dotenv";
 dotenv.config();
@@ -20,6 +21,7 @@ export class Session {
     public avatar: string;
     public includeCodebase = true;
     public customContext: string | null = null;
+    public agentState: Map< string, AgentSessionState > = new Map();
 
     public baseSystemPrompt = {
         role: 'system',

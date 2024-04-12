@@ -7,6 +7,8 @@ export class ClaudeSession extends Session
 }
 
 export class Claude extends Agent< ClaudeSession > {
+    public getId(): string { return 'Claude'; }
+
     public async run(session: Session): Promise<void> {
         let claude_output = await session.llm([...session.messages,
         {
@@ -42,4 +44,4 @@ import { AgentRegistry } from '../AgentRegistry';
 import { AgentConfig } from "../AgentConfig";
 import express from 'express';
 
-AgentRegistry.registerAgentFactory('Claude', (res: express.Response, options: AgentConfig) => ((new Claude(res, options))));
+AgentRegistry.registerAgentFactory((session: Session, res: express.Response, options: AgentConfig) => ((new Claude(session, res, options))));

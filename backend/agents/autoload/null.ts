@@ -3,6 +3,7 @@ import { Agent } from "../agent";
 import * as fs from 'fs';
 
 export class Null extends Agent<any> {
+    public getId(): string { return 'Null'; }
     visible: boolean = false;
     
     public async run(session: Session): Promise<void> {
@@ -68,4 +69,4 @@ import { AgentRegistry } from '../AgentRegistry';
 import { AgentConfig } from "../AgentConfig";
 import express from 'express';
 
-AgentRegistry.registerAgentFactory('Null', (res: express.Response, options: AgentConfig) => ((new Null(res, options))));
+AgentRegistry.registerAgentFactory((session: Session, res: express.Response, options: AgentConfig) => ((new Null(session, res, options))));

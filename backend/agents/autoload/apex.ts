@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { Session } from "../../session";
-import { Agent } from "../agent";
+import { Agent, AgentSessionState } from "../agent";
 import fs from 'fs';
 import path from 'path';
 import { DOMParser } from 'xmldom';
@@ -11,10 +11,12 @@ import os from 'os';
 import { parseCodeToAST } from "../ast";
 
 
-export class ApexSession extends Session {
+export class ApexSession extends AgentSessionState {
 }
 
 export class Apex extends Agent<ApexSession> {
+    public getId(): string { return 'Apex'; }
+
 
     code_messages: any[] = [];
     root_dir = process.env.ROOT_CODE_PATH ?? "../";
@@ -99,7 +101,7 @@ export class Apex extends Agent<ApexSession> {
         return files;
     }
 
-    public async run(session: ApexSession): Promise<void> {
+    public async run(session: Session): Promise<void> {
         const userInput = session.messages.length > 0 ? session.messages[session.messages.length - 1].content : '';
         const tempDir = path.join(os.tmpdir(), `apex-${session.id}`);
         fs.mkdirSync(tempDir, { recursive: true });
@@ -418,7 +420,7 @@ Here is the AST of the codebase: ${ast} `,
         return errorMessages;
     }
 
-    private async handleMultiContext(session: ApexSession, args: string[]): Promise<void> {
+    private async handleMultiContext(session: Session, args: string[]): Promise<void> {
         const tempDir = path.join(os.tmpdir(), `apex-${session.id}`);
         fs.mkdirSync(tempDir, { recursive: true });
         execSync(`sh agents/apex/concatenate-code.sh ${this.root_dir} ${tempDir}`);
@@ -468,8 +470,8 @@ Here is the AST of the codebase: ${ast} `,
         session.send('🎉 Context updated successfully!');
     }
 
-    constructor(res: express.Response, protected config: AgentConfig) {
-        super(res, config);
+    constructor(session: Session, res: express.Response, protected config: AgentConfig) {
+        super(session, res, config);
     }
 }
 
@@ -477,4 +479,4 @@ import { AgentRegistry } from '../AgentRegistry';
 import { AgentConfig } from "../AgentConfig";
 import express from 'express';
 
-AgentRegistry.registerAgentFactory('Apex', (res: express.Response, options: AgentConfig) => ((new Apex(res, options))));
+AgentRegistry.registerAgentFactory((session: Session, res: express.Response, options: AgentConfig) => ((new Apex(session, res, options))));

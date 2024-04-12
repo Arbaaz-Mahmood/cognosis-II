@@ -11,15 +11,24 @@ dotenv.config();
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
-export abstract class Agent< Session > {
+export class AgentSessionState {
+}
+
+export abstract class Agent< T extends AgentSessionState > {
     res: express.Response;
     visible: boolean = true;
-    
-    constructor(res: express.Response, protected config: AgentConfig) {
+    session: Session;
+
+    constructor(session: Session, res: express.Response, protected config: AgentConfig) {
         this.res = res;
+        this.session = session;
     }
-    
+
+    public abstract getId(): string;
     public abstract run(session: Session): Promise<void>;
+    public sessionStateFactory(): T {
+        return new AgentSessionState() as T;
+    }
 
     async generateSpeech(str: string, voice: "onyx" | "shimmer"): Promise<string> {
         try {
@@ -66,7 +75,7 @@ export abstract class Agent< Session > {
                         stability: 0,
                         similarity_boost: 0.25,
                         style_exaggeration: 1.0
-                    }                
+                    }
                 },
                 {
                     headers: {

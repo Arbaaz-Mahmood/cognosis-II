@@ -9,6 +9,7 @@ export class StrategoSession extends Session {
 
 
 export class Stratego extends Agent< StrategoSession >{
+  public getId(): string { return 'Stratego'; }
   public async run(session: Session): Promise<void> {
     const userInput = session.messages.length > 0 ? session.messages[session.messages.length - 1].content : '';
 
@@ -37,4 +38,4 @@ import { AgentRegistry } from '../AgentRegistry';
 import { AgentConfig } from "../AgentConfig";
 import express from 'express';
 
-AgentRegistry.registerAgentFactory('Stratego', (res: express.Response, options: AgentConfig) => ((new Stratego(res, options))));
+AgentRegistry.registerAgentFactory((session: Session, res: express.Response, options: AgentConfig) => ((new Stratego(session, res, options))));
