@@ -18,3 +18,4 @@
 - As an Apex user, I want to see a sidebar with what code is in context
 - As a Cognosis 2 developer, I want feedback loop UI
 - As a Cognosis 2 user, I want flat or folder structure of past conversations
+- As a Cognosis 2 user, I want code which is pasted to automatically end up in properly typed codeblack via magic.
